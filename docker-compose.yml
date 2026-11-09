@@ -1,0 +1,40 @@
+services:
+  # PostgreSQL — the CRM database (equivalent to the "Primary Database" in the diagram).
+  db:
+    image: postgres:17-alpine
+    container_name: layered-crm-db
+    environment:
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm
+      POSTGRES_DB: crm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm -d crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      # Host 55432 avoids clashing with other local PostgreSQL instances.
+      # The API connects through the internal compose network, not this mapping.
+      - "55432:5432"
+
+  # Layered API (Presentation -> Business -> DataAccess -> Domain).
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: layered-crm-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DatabaseProvider: PostgreSql
+      ConnectionStrings__Crm: Host=db;Port=5432;Database=crm;Username=crm;Password=crm
+    ports:
+      # Change the host port here if 5199 is taken on your machine.
+      - "5199:8080"
+
+volumes:
+  pgdata:

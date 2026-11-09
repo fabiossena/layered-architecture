@@ -1,0 +1,17 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.trx
+
+# Local development database
+*.db
+*.db-shm
+*.db-wal
+
+# Logs and editors
+*.log
+.idea/
+.vscode/

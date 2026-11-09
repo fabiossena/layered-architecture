@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LayeredCrm — Web Client</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="layer">Separate client · calls the Presentation layer over HTTP</div>
+    <h1>LayeredCrm</h1>
+  </div>
+
+  <!-- Menu that switches between the registers -->
+  <nav class="menu" id="menu">
+    <a href="#/contacts" data-module="contacts">Contacts</a>
+    <a href="#/opportunities" data-module="opportunities">Opportunities</a>
+  </nav>
+
+  <nav class="links">
+    <a href="/swagger" target="_blank">Swagger UI</a>
+  </nav>
+</header>
+
+<main>
+  <div id="error"></div>
+  <div id="success"></div>
+
+  <!-- ================= LIST VIEW ================= -->
+  <section id="list-view">
+    <div class="toolbar">
+      <div>
+        <h2 id="list-title">Contacts</h2>
+        <span class="hint" id="list-count"></span>
+      </div>
+      <button id="btn-new">+ New contact</button>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead id="list-head"></thead>
+        <tbody id="list-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= FORM VIEW (same screen for new + edit) ================= -->
+  <section id="form-view" hidden>
+    <div class="toolbar">
+      <h2 id="form-title">New contact</h2>
+      <button id="btn-back" class="secondary">← Back to list</button>
+    </div>
+
+    <div class="card form-card">
+      <form id="record-form">
+        <!-- ---- Contact fields ---- -->
+        <div id="contact-fields" class="fields" hidden>
+          <div class="row">
+            <label>First name *
+              <input id="c-firstname" required maxlength="100" />
+            </label>
+            <label>Last name *
+              <input id="c-lastname" required maxlength="100" />
+            </label>
+          </div>
+          <label>Email *
+            <input id="c-email" type="email" required />
+          </label>
+          <div class="row">
+            <label>Phone
+              <input id="c-phone" maxlength="40" />
+            </label>
+            <label>Status
+              <select id="c-status">
+                <option>New</option>
+                <option>Contacted</option>
+                <option>Qualified</option>
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </label>
+          </div>
+          <label>Company
+            <select id="c-company"><option value="">No company</option></select>
+          </label>
+        </div>
+
+        <!-- ---- Opportunity fields ---- -->
+        <div id="opportunity-fields" class="fields" hidden>
+          <label>Title *
+            <input id="o-title" required maxlength="200" />
+          </label>
+          <div class="row">
+            <label>Amount *
+              <input id="o-amount" type="number" min="1" step="0.01" required />
+            </label>
+            <label>Expected close date
+              <input id="o-close" type="date" />
+            </label>
+          </div>
+          <label>Contact *
+            <select id="o-contact" required><option value="">Select a contact</option></select>
+          </label>
+          <!-- Stage is only changed through edit (business rules) -->
+          <label id="o-stage-group" hidden>Stage
+            <select id="o-stage">
+              <option>Qualification</option>
+              <option>Proposal</option>
+              <option>Negotiation</option>
+              <option>Won</option>
+              <option>Lost</option>
+            </select>
+            <span class="hint">Stage transitions are validated by the Business layer (invalid moves → 409).</span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="btn-save">Save</button>
+          <button type="button" class="secondary" id="btn-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

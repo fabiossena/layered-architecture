@@ -1,0 +1,20 @@
+# Build artifacts and local data
+**/bin/
+**/obj/
+*.db
+*.db-shm
+*.db-wal
+
+# Version control and IDE
+.git/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Files that do not need to go into the image
+docker-compose*.yml
+Dockerfile
+.dockerignore
+README.md
+.gitignore
